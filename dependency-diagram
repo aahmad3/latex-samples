@@ -1,0 +1,78 @@
+%Latex template for creating dependency diagrams in a tree-like format - used here for code dependencies
+%library used - prerex - comprehensive documentation @ https://ctan.joethei.xyz/graphics/prerex/doc/prerex.pdf
+
+\documentclass{article}
+
+\title{Code Dependency Diagram}
+\author{Author Name}
+\date{\today}
+
+\usepackage{geometry}
+\geometry{noheadfoot, vmargin=1.0in, hmargin=0.5in} %set margins
+\usepackage{prerex}
+\usetikzlibrary{fit}
+
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\setcounter{diagheight}{50}
+
+
+\begin{chart}
+%\grid
+\fullcourse 45,45:{main.c}{main\_function()}{}
+\reqhalfcourse 45,37:{high\_level\_code.c}{some\_high\_level\_function()}{}
+\reqhalfcourse 25,29:{mid\_level\_code1.c}{mid\_level\_function1()}{}
+\reqhalfcourse 45,29:{mid\_level\_code2.c}{mid\_level\_function2()}{}
+\opthalfcourse 70,29:{external\_code.c}{external\_function()}{}
+\text 70,25: {Description of functionality}
+\reqhalfcourse 35,20:{common\_code.c}{common\_function()}{}
+
+%branch1
+\reqhalfcourse 15,9:{code\_branch1.c}{branch1\_function()}{}
+\reqhalfcourse 4,1:{branch1\_internal1.c}{b1\_internalfunc1()}{}
+\reqhalfcourse 20,1:{branch1\_internal2.c}{b1\_internalfunc2()}{}
+\reqhalfcourse 18,-7:{branch1\_internal3.c}{b1\_internalfunc3()}{}
+\text 4,-8: {Branch 1 \\ description}
+
+%branch2
+\reqhalfcourse 47,12:{code\_branch2.c}{branch2\_function()}{}
+\reqhalfcourse 71,12:{branch2\_internal1.c}{b2\_internalfunc1()}{}
+\fullcourse 71,2:{INBUILT}{some\_internal\_func1() \\ some\_internal\_func2()}{}
+\reqhalfcourse 47,4:{branch2\_internal2.c}{b2\_internalfunc2()}{}
+\reqhalfcourse 47,-6:{branch2\_internal3.c}{b2\_internalfunc3()}{}
+\fullcourse 70,-15:{INBUILT}{some\_internal\_func3() \\ some\_internal\_func4() \\ some\_internal\_func5()}{}
+\text 45,-15: {Branch 2 \\ description}
+
+%arrows - starting coordinates to ending coordinates, optionally add curvature
+\prereq 45,45,45,37:
+\prereq 45,37,25,29:
+\prereq 45,37,45,29:
+\recomm 45,37,70,29:
+\prereqc 25,29,35,20;-30:
+\prereqc 45,29,35,20;-30:
+\prereq 35,20,47,12:
+\prereq 47,12,71,12:
+\prereqc 71,12,71,2;-30:
+\prereqc 47,12,47,4;-30:
+\prereq 47,4,47,-6:
+\prereqc 47,4,70,-15;30:
+
+\prereq 35,20,15,9:
+\prereqc 15,9,4,1;20:
+\prereqc 15,9,20,1;20:
+
+\prereqc 4,1,18,-7;-20:
+\prereqc 20,1,18,-7;-20:
+
+%colored bounding boxes - specify color, opacity, and corner coordinates
+\begin{pgfonlayer}{courses}
+\filldraw[dashed, fill=red!15!white, draw=red!70!black, fill opacity = 0.2] (32,16) rectangle (83,-24);
+\filldraw[dashed, fill=blue!10!white, draw=blue!50!black, fill opacity = 0.2] (-3.5,13) rectangle (28,-11);
+\end{pgfonlayer}
+
+
+\end{chart}
+
+\end{document}
